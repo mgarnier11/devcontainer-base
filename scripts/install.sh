@@ -35,6 +35,6 @@ printf "NVM Installed"
 sudo chsh -s /usr/bin/zsh $USER
 
 if [ -f /setup/setup-env.sh ]; then
-  bash /setup/setup-env.sh
+  /setup/setup-env.sh
 fi
 
