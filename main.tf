@@ -15,6 +15,10 @@ terraform {
 }
 
 # Input variables
+variable "image_name" {
+  type        = string
+  description = "The name of the Docker image to build."
+}
 variable "agent_id" {
   type        = string
   description = "The ID of a Coder agent."
@@ -53,13 +57,6 @@ variable "coder_init_script" {
   
 }
 
-# Output variables
-
-output "docker_image_name" {
-  value = "${docker_image.main.name}"
-  
-}
-
 
 
 resource "coder_script" "install" {
@@ -93,7 +90,7 @@ resource "coder_script" "install-vscode" {
 }
 
 resource "docker_image" "main" {
-  name = "coder-${data.coder_workspace.me.id}"
+  name = var.image_name
   build {
     context = "./docker"
     no_cache = true
