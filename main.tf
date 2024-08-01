@@ -80,7 +80,6 @@ resource "coder_script" "install-vscode" {
     INSTALL_PREFIX : "/tmp/vscode-web",
     EXTENSIONS : join(",", var.vscode_extensions),
     TELEMETRY_LEVEL : "off",
-    # SETTINGS : replace(jsonencode(var.settings), "\"", "\\\""),
     OFFLINE : false,
     USE_CACHED : false,
     EXTENSIONS_DIR : "/home/${var.username}/.vscode-server/extensions",

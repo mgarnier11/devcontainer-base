@@ -23,13 +23,6 @@ run_vscode_web() {
   "$VSCODE_WEB" serve-web "$EXTENSION_ARG" --port "${PORT}" --host 0.0.0.0 --accept-server-license-terms --without-connection-token --telemetry-level "${TELEMETRY_LEVEL}" > "${LOG_PATH}" 2>&1 &
 }
 
-# # Check if the settings file exists...
-# if [ ! -f ~/.vscode-server/data/Machine/settings.json ]; then
-#   echo "⚙️ Creating settings file..."
-#   mkdir -p ~/.vscode-server/data/Machine
-#   echo "${SETTINGS}" > ~/.vscode-server/data/Machine/settings.json
-# fi
-
 # Check if vscode-server is already installed for offline or cached mode
 if [ -f "$VSCODE_WEB" ]; then
   if [ "${OFFLINE}" = true ] || [ "${USE_CACHED}" = true ]; then
