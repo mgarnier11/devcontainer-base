@@ -93,7 +93,7 @@ resource "docker_image" "main" {
   name = var.image_name
   build {
     context = "${path.module}/docker"
-    dockerfile = "${path.module}/docker/Dockerfile"
+    # dockerfile = "${path.module}/docker/Dockerfile"
 
     no_cache = true
     build_args = {
