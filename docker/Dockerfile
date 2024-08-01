@@ -78,7 +78,8 @@ ARG USER=coder
 
 # Setup the entrypoint
 ARG CODER_INIT_SCRIPT="echo 'Hello from Coder!'"
-RUN echo "${CODER_INIT_SCRIPT}" > /setup/entrypoint.sh && \
+RUN mkdir /setup && \
+  echo "${CODER_INIT_SCRIPT}" > /setup/entrypoint.sh && \
   sed -i "1a sudo socat UNIX-LISTEN:/var/run/docker.sock,fork,mode=660,user=${USER} UNIX-CONNECT:/var/run/docker-host.sock &" /setup/entrypoint.sh
 
 # Create a non-root user
