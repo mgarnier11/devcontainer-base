@@ -94,7 +94,7 @@ USER ${USER}
 WORKDIR /home/${USER}
 
 # Setup user home directory and SSH keys
-COPY home .
+# COPY home .
 COPY ssh .ssh
 
 RUN sudo chown -R ${USER}:${USER} .ssh && \
