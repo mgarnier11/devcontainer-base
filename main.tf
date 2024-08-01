@@ -41,12 +41,6 @@ variable "setup_script" {
   type        = string
   description = "A script to run on workspace setup."
 }
-
-variable "ssh_private_key" {
-  type        = string
-  description = "The SSH private key to setup for the workspace user."
-}
-
 variable "vscode_extensions" {
   type        = list(string)
   description = "VS Code extensions to install."
@@ -79,7 +73,21 @@ resource "coder_script" "install" {
 resource "coder_script" "install-vscode" {
   agent_id = var.agent_id
   display_name = "Install requirements"
-  script   = templatefile("${path.module}/scripts/install-vscode-web.sh", {})
+  script   = templatefile("${path.module}/scripts/install-vscode-web.sh", {
+    PORT : var.vscode_web_port,
+    LOG_PATH : "/tmp/vscode-web.log",
+    INSTALL_PREFIX : "/tmp/vscode-web",
+    EXTENSIONS : join(",", var.vscode_extensions),
+    TELEMETRY_LEVEL : "off",
+    # SETTINGS : replace(jsonencode(var.settings), "\"", "\\\""),
+    OFFLINE : false,
+    USE_CACHED : false,
+    EXTENSIONS_DIR : "/home/${var.username}/.vscode-server/extensions",
+    FOLDER : "/home/${var.username}",
+    AUTO_INSTALL_EXTENSIONS : true,
+    
+
+  })
   run_on_start = true
   start_blocks_login = true
 }
