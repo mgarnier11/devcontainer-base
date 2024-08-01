@@ -37,10 +37,11 @@ variable "username" {
   description = "The username of the workspace user."
 }
 
-variable "setup_script" {
-  type        = string
-  description = "A script to run on workspace setup."
-}
+# variable "setup_script" {
+#   type        = string
+#   description = "A script to run on workspace setup."
+# }
+
 variable "vscode_extensions" {
   type        = list(string)
   description = "VS Code extensions to install."
@@ -85,7 +86,7 @@ resource "coder_script" "install-vscode" {
     EXTENSIONS_DIR : "/home/${var.username}/.vscode-server/extensions",
     FOLDER : "/home/${var.username}",
     AUTO_INSTALL_EXTENSIONS : true,
-    
+
 
   })
   run_on_start = true
