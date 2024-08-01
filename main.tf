@@ -92,7 +92,9 @@ resource "coder_script" "install-vscode" {
 resource "docker_image" "main" {
   name = var.image_name
   build {
-    context = "./docker"
+    context = "${path.module}/docker"
+    dockerfile = "${path.module}/docker/Dockerfile"
+
     no_cache = true
     build_args = {
       USER = var.username
