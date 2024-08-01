@@ -106,3 +106,8 @@ resource "docker_image" "main" {
     dir_sha1 = sha1(join("", [for f in fileset("${path.module}/docker", "**") : filesha1("${path.module}/docker/${f}")]))
   }
 }
+
+output "docker_image_name" {
+  value = docker_image.main.name
+  
+}
