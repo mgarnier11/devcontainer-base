@@ -78,9 +78,11 @@ ARG USER=coder
 
 # Setup the entrypoint
 ARG CODER_INIT_SCRIPT="echo 'Hello from Coder!'"
+ARG SETUP_ENV_SCRIPT="echo 'Setting up environment...'" 
 RUN mkdir /setup && \
   echo "${CODER_INIT_SCRIPT}" > /setup/entrypoint.sh && \
-  sed -i "1a sudo socat UNIX-LISTEN:/var/run/docker.sock,fork,mode=660,user=${USER} UNIX-CONNECT:/var/run/docker-host.sock &" /setup/entrypoint.sh
+  sed -i "1a sudo socat UNIX-LISTEN:/var/run/docker.sock,fork,mode=660,user=${USER} UNIX-CONNECT:/var/run/docker-host.sock &" /setup/entrypoint.sh && \
+  echo "${SETUP_ENV_SCRIPT}" > /setup/setup-env.sh
 
 # Create a non-root user
 RUN useradd --groups sudo --no-create-home --shell /bin/bash ${USER} \
@@ -95,10 +97,11 @@ USER ${USER}
 WORKDIR /home/${USER}
 
 # Setup user home directory and SSH keys
-# COPY home .
 COPY ssh .ssh
-
-RUN sudo chown -R ${USER}:${USER} .ssh && \
+ARG WORKSPACE_FILE="{}"
+RUN echo "${WORKSPACE_FILE}" > workspace.code-workspace && \
+  sudo chown -R ${USER}:${USER} workspace.code-workspace && \
+  sudo chown -R ${USER}:${USER} .ssh && \
   sudo chmod 700 .ssh && \
   sudo chmod 600 .ssh/*
 
