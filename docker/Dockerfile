@@ -79,10 +79,10 @@ ARG USER=coder
 # Setup the entrypoint
 ARG CODER_INIT_SCRIPT="echo 'Hello from Coder!'"
 ARG SETUP_ENV_SCRIPT="echo 'Setting up environment...'"
-COPY ./scripts/additional-entrypoint.sh /setup/additionnal-entrypoint.sh
+# COPY ./scripts/additional-entrypoint.sh /setup/additionnal-entrypoint.sh
 RUN mkdir /setup && \
   echo "${CODER_INIT_SCRIPT}" > /setup/entrypoint.sh && \
-  sed -i "1a bash /setup/additionnal-entrypoint.sh" /setup/entrypoint.sh && \
+  # sed -i "1a bash /setup/additionnal-entrypoint.sh" /setup/entrypoint.sh && \
   echo "${SETUP_ENV_SCRIPT}" > /setup/setup-env.sh
   
 
