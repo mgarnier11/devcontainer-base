@@ -1,15 +1,15 @@
-FROM ubuntu:22.04
+FROM nestybox/ubuntu-jammy-compose:latest
 
-SHELL ["/bin/bash", "-c"]
-ENV DEBIAN_FRONTEND=noninteractive
+# SHELL ["/bin/bash", "-c"]
+# ENV DEBIAN_FRONTEND=noninteractive
 
 # Install the Docker apt repository
-RUN apt-get update && \
-    apt-get upgrade --yes && \
-    apt-get install --yes ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
-COPY docker-install/docker-archive-keyring.gpg /usr/share/keyrings/docker-archive-keyring.gpg
-COPY docker-install/docker.list /etc/apt/sources.list.d/docker.list
+# RUN apt-get update && \
+#     apt-get upgrade --yes && \
+#     apt-get install --yes ca-certificates && \
+#     rm -rf /var/lib/apt/lists/*
+# COPY docker-install/docker-archive-keyring.gpg /usr/share/keyrings/docker-archive-keyring.gpg
+# COPY docker-install/docker.list /etc/apt/sources.list.d/docker.list
 
 # Install baseline packages
 RUN apt-get update && \
@@ -19,12 +19,12 @@ RUN apt-get update && \
     build-essential \
     ca-certificates \
     cifs-utils \
-    containerd.io \
+    # containerd.io \
     curl \
-    docker-ce \
-    docker-ce-cli \
-    docker-buildx-plugin \
-    docker-compose-plugin \
+    # docker-ce \
+    # docker-ce-cli \
+    # docker-buildx-plugin \
+    # docker-compose-plugin \
     dmidecode \
     gpg \
     htop \
@@ -41,24 +41,25 @@ RUN apt-get update && \
     python3-pip \
     software-properties-common \
     sudo \
-    systemd \
-    systemd-sysv \
+    # systemd \
+    # systemd-sysv \
     unzip \
     util-linux \
     vim \
     wget \
     rsync \
-    socat && \
+    # socat \
+    && \
 # Install latest Git using their official PPA
     add-apt-repository ppa:git-core/ppa && \
     apt-get install --yes git \
     && rm -rf /var/lib/apt/lists/*
 
 # Enables Docker starting with systemd
-RUN systemctl enable docker
+# RUN systemctl enable docker
 
 # Create a symlink for standalone docker-compose usage
-RUN ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/bin/docker-compose
+# RUN ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/bin/docker-compose
 
 # SSH server configuration
 ARG SSHD_PORT=2222
