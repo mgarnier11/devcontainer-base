@@ -66,21 +66,21 @@ variable "vscode_extensions" {
   default     = []
 }
 
-# variable "coder_init_script" {
-#   type        = string
-#   description = "The Coder init script."
+variable "coder_init_script" {
+  type        = string
+  description = "The Coder init script."
   
-#   validation {
-#     condition = length(var.coder_init_script) > 0
-#     error_message = "The Coder init script must be provided."
-#   }
-# }
+  validation {
+    condition = length(var.coder_init_script) > 0
+    error_message = "The Coder init script must be provided."
+  }
+}
 
 
 
-resource "coder_script" "install" {
+resource "coder_script" "install-dependencies" {
   agent_id = var.agent_id
-  display_name = "Install requirements"
+  display_name = "Install dependencies"
   script   = templatefile("${path.module}/scripts/install.sh", {})
   run_on_start = true
   start_blocks_login = true
@@ -89,7 +89,7 @@ resource "coder_script" "install" {
 
 resource "coder_script" "install-vscode" {
   agent_id = var.agent_id
-  display_name = "Install requirements"
+  display_name = "Install vscode-web"
   script   = templatefile("${path.module}/scripts/install-vscode-web.sh", {
     PORT : var.vscode_web_port,
     LOG_PATH : "/tmp/vscode-web.log",
@@ -118,7 +118,7 @@ resource "docker_image" "main" {
     build_args = {
       USER = var.username
       SSHD_PORT = var.sshd_port
-      # CODER_INIT_SCRIPT = var.coder_init_script
+      CODER_INIT_SCRIPT = var.coder_init_script
       SETUP_ENV_SCRIPT = var.setup_env_script
       WORKSPACE_FILE = var.workspace_file
     }
