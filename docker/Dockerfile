@@ -84,7 +84,7 @@ RUN mkdir -p /setup
 COPY ./scripts/additional-entrypoint.sh /setup/additional-entrypoint.sh
 RUN \
   echo "${CODER_INIT_SCRIPT}" > /setup/entrypoint.sh && \
-  sed -i "1a bash /setup/additional-entrypoint.sh" /setup/entrypoint.sh && \
+  sed -i "1a sudo bash /setup/additional-entrypoint.sh" /setup/entrypoint.sh && \
   echo "${SETUP_ENV_SCRIPT}" > /setup/setup-env.sh
   
 
