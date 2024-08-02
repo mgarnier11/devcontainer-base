@@ -81,7 +81,7 @@ variable "coder_init_script" {
 resource "coder_script" "install-dependencies" {
   agent_id = var.agent_id
   display_name = "Install dependencies"
-  script   = templatefile("${path.module}/scripts/install.sh", {})
+  script   = templatefile("${path.module}/scripts/install-dependencies.sh", {})
   run_on_start = true
   start_blocks_login = true
 }
