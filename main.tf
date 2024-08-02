@@ -20,15 +20,25 @@ variable "image_name" {
   description = "The name of the Docker image to build."
   default     = "coder-devcontainer"
 }
-variable "agent_id" {
-  type        = string
-  description = "The ID of a Coder agent."
 
-  validation {
-    condition = length(var.agent_id) > 0
-    error_message = "The agent ID must be provided."
-  }
+variable arch {
+  type = string
+  description = "The architecture of the agent."
 }
+
+variable os {
+  type = string
+  description = "The operating system of the agent."
+}
+# variable "agent_id" {
+#   type        = string
+#   description = "The ID of a Coder agent."
+
+#   validation {
+#     condition = length(var.agent_id) > 0
+#     error_message = "The agent ID must be provided."
+#   }
+# }
 
 variable "sshd_port" {
   type        = number
@@ -66,20 +76,78 @@ variable "vscode_extensions" {
   default     = []
 }
 
-variable "coder_init_script" {
-  type        = string
-  description = "The Coder init script."
+# variable "coder_init_script" {
+#   type        = string
+#   description = "The Coder init script."
   
-  validation {
-    condition = length(var.coder_init_script) > 0
-    error_message = "The Coder init script must be provided."
+#   validation {
+#     condition = length(var.coder_init_script) > 0
+#     error_message = "The Coder init script must be provided."
+#   }
+# }
+
+
+
+resource "coder_agent" "main" {
+  arch            = var.arch
+  os              = var.os
+  
+  display_apps {
+    vscode = false
+    port_forwarding_helper = false
+    ssh_helper = false
+  }
+
+
+  metadata {
+    display_name = "CPU Usage"
+    key          = "container_cpu_usage"
+    script       = "coder stat cpu"
+    interval     = 20
+    timeout      = 1
+    order        = 1
+  }
+
+  metadata {
+    display_name = "RAM Usage"
+    key          = "contaier_ram_usage"
+    script       = "coder stat mem"
+    interval     = 20
+    timeout      = 1
+    order        = 2
+  }
+
+  
+  metadata {
+    display_name = "CPU Usage (Host)"
+    key          = "host_cpu_usage"
+    script       = "coder stat cpu --host"
+    interval     = 20
+    timeout      = 1
+    order        = 3
+  }
+
+  metadata {
+    display_name = "RAM Usage (Host)"
+    key          = "host_ram_usage"
+    script       = "coder stat mem --host"
+    interval     = 20
+    timeout      = 1
+    order        = 4
+  }
+
+    metadata {
+    display_name = "Storage"
+    key          = "storage"
+    script       = "coder stat disk"
+    interval     = 60
+    timeout      = 1
+    order        = 5
   }
 }
 
-
-
 resource "coder_script" "install-dependencies" {
-  agent_id = var.agent_id
+  agent_id = coder_agent.main.id
   display_name = "Install dependencies"
   script   = templatefile("${path.module}/scripts/install-dependencies.sh", {})
   run_on_start = true
@@ -88,7 +156,7 @@ resource "coder_script" "install-dependencies" {
 
 
 resource "coder_script" "install-vscode" {
-  agent_id = var.agent_id
+  agent_id = coder_agent.main.id
   display_name = "Install vscode-web"
   script   = templatefile("${path.module}/scripts/install-vscode-web.sh", {
     PORT : var.vscode_web_port,
@@ -112,13 +180,12 @@ resource "docker_image" "main" {
   name = var.image_name
   build {
     context = "${path.module}/docker"
-    # dockerfile = "${path.module}/docker/Dockerfile"
 
     no_cache = true
     build_args = {
       USER = var.username
       SSHD_PORT = var.sshd_port
-      CODER_INIT_SCRIPT = var.coder_init_script
+      CODER_INIT_SCRIPT = replace(coder_agent.main.init_script, "/localhost|127\\.0\\.0\\.1/", "host.docker.internal")
       SETUP_ENV_SCRIPT = var.setup_env_script
       WORKSPACE_FILE = var.workspace_file
     }
@@ -130,5 +197,8 @@ resource "docker_image" "main" {
 
 output "docker_image_name" {
   value = docker_image.main.name
-  
+}
+
+output "agent_id" {
+  value = coder_agent.main.id
 }
