@@ -1,4 +1,4 @@
-FROM nestybox/ubuntu-jammy-compose:latest
+FROM ubuntu:jammy 
 
 # SHELL ["/bin/bash", "-c"]
 # ENV DEBIAN_FRONTEND=noninteractive
@@ -13,7 +13,8 @@ FROM nestybox/ubuntu-jammy-compose:latest
 
 # Install baseline packages
 RUN apt-get update && \
-    apt-get install --yes \
+    apt-get install --no-install-recommends --yes \
+    apt-transport-https \
     bash \
     bash-completion \
     build-essential \
@@ -26,6 +27,7 @@ RUN apt-get update && \
     # docker-buildx-plugin \
     # docker-compose-plugin \
     dmidecode \
+    gnupg-agent \
     gpg \
     htop \
     iputils-ping \
@@ -54,6 +56,14 @@ RUN apt-get update && \
     add-apt-repository ppa:git-core/ppa && \
     apt-get install --yes git \
     && rm -rf /var/lib/apt/lists/*
+
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+RUN apt-key fingerprint 0EBFCD88
+RUN add-apt-repository \
+      "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+      $(lsb_release -cs) \
+      stable"
+RUN apt-get update && apt-get install --no-install-recommends -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 # Enables Docker starting with systemd
 # RUN systemctl enable docker
