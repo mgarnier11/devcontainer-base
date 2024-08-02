@@ -202,3 +202,7 @@ output "docker_image_name" {
 output "agent_id" {
   value = coder_agent.main.id
 }
+
+output "agent_token" {
+  value = coder_agent.main.token
+}
