@@ -18,8 +18,8 @@ sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b .local && \
 printf "Task Installed"
 
 # Coder Installation
-curl -L https://coder.com/install.sh | sh
-printf "Coder Installed"
+# curl -L https://coder.com/install.sh | sh
+# printf "Coder Installed"
 
 # Go Installation
 curl -o go.tar.gz https://dl.google.com/go/go1.22.4.linux-amd64.tar.gz && \
