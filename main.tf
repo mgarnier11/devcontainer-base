@@ -66,15 +66,15 @@ variable "vscode_extensions" {
   default     = []
 }
 
-variable "coder_init_script" {
-  type        = string
-  description = "The Coder init script."
+# variable "coder_init_script" {
+#   type        = string
+#   description = "The Coder init script."
   
-  validation {
-    condition = length(var.coder_init_script) > 0
-    error_message = "The Coder init script must be provided."
-  }
-}
+#   validation {
+#     condition = length(var.coder_init_script) > 0
+#     error_message = "The Coder init script must be provided."
+#   }
+# }
 
 
 
@@ -118,7 +118,7 @@ resource "docker_image" "main" {
     build_args = {
       USER = var.username
       SSHD_PORT = var.sshd_port
-      CODER_INIT_SCRIPT = var.coder_init_script
+      # CODER_INIT_SCRIPT = var.coder_init_script
       SETUP_ENV_SCRIPT = var.setup_env_script
       WORKSPACE_FILE = var.workspace_file
     }
