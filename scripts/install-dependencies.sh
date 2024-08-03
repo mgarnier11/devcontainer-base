@@ -13,24 +13,32 @@ sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.2
 printf "ZSH Installed"
 
 # Task Installation
-sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b .local && \
-  echo "export PATH=\$PATH:~/.local" >> ~/.zshrc
-printf "Task Installed"
+if [ -z $INSTALL_TASK ]; then
+  sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b .local && \
+    echo "export PATH=\$PATH:~/.local" >> ~/.zshrc
+  printf "Task Installed"
+fi
 
 # Coder Installation
-# curl -L https://coder.com/install.sh | sh
-# printf "Coder Installed"
+if [ -z $INSTALL_CODER ]; then
+  curl -L https://coder.com/install.sh | sh
+  printf "Coder Installed"
+fi
 
 # Go Installation
-curl -o go.tar.gz https://dl.google.com/go/go1.22.4.linux-amd64.tar.gz && \
-  sudo tar -C /usr/local -xzf go.tar.gz && \
-  rm go.tar.gz && \
-  echo "export PATH=\$PATH:/usr/local/go/bin" >> ~/.zshrc
-printf "Go Installed"
+if [ -z $INSTALL_GO ]; then
+  curl -o go.tar.gz https://dl.google.com/go/go1.22.4.linux-amd64.tar.gz && \
+    sudo tar -C /usr/local -xzf go.tar.gz && \
+    rm go.tar.gz && \
+    echo "export PATH=\$PATH:/usr/local/go/bin" >> ~/.zshrc
+  printf "Go Installed"
+fi
 
 # NVM Installation
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-printf "NVM Installed"
+if [ -z $INSTALL_NVM ]; then
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+  printf "NVM Installed"
+fi
 
 sudo chsh -s /usr/bin/zsh $USER
 

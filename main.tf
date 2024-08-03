@@ -30,15 +30,6 @@ variable os {
   type = string
   description = "The operating system of the agent."
 }
-# variable "agent_id" {
-#   type        = string
-#   description = "The ID of a Coder agent."
-
-#   validation {
-#     condition = length(var.agent_id) > 0
-#     error_message = "The agent ID must be provided."
-#   }
-# }
 
 variable "sshd_port" {
   type        = number
@@ -76,17 +67,29 @@ variable "vscode_extensions" {
   default     = []
 }
 
-# variable "coder_init_script" {
-#   type        = string
-#   description = "The Coder init script."
-  
-#   validation {
-#     condition = length(var.coder_init_script) > 0
-#     error_message = "The Coder init script must be provided."
-#   }
-# }
+variable "install_coder" {
+  type        = bool
+  description = "Install coder CLI in the workspace."
+  default     = false
+}
 
+variable "install_tasks" {
+  type        = bool
+  description = "Install task in the workspace."
+  default     = false
+}
 
+variable "install_go" {
+  type        = bool
+  description = "Install Go in the workspace."
+  default     = false
+}
+
+variable "install_nvm" {
+  type        = bool
+  description = "Install NVM in the workspace."
+  default     = false  
+}
 
 resource "coder_agent" "main" {
   arch            = var.arch
@@ -149,7 +152,12 @@ resource "coder_agent" "main" {
 resource "coder_script" "install-dependencies" {
   agent_id = coder_agent.main.id
   display_name = "Install dependencies"
-  script   = templatefile("${path.module}/scripts/install-dependencies.sh", {})
+  script   = templatefile("${path.module}/scripts/install-dependencies.sh", {
+    INSTALL_CODER : var.install_coder,
+    INSTALL_TASKS : var.install_tasks,
+    INSTALL_GO : var.install_go,
+    INSTALL_NVM : var.install_nvm,
+  })
   run_on_start = true
   start_blocks_login = true
 }
