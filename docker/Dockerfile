@@ -64,13 +64,13 @@ ARG USER=coder
 
 # Setup the entrypoint
 ARG CODER_INIT_SCRIPT="echo 'Hello from Coder!'"
-ARG SETUP_ENV_SCRIPT="echo 'Setting up environment...'"
+ARG SETUP_ENV_SCRIPT_B64=""
 RUN mkdir -p /setup 
 COPY ./scripts/additional-entrypoint.sh /setup/additional-entrypoint.sh
 RUN \
   echo "${CODER_INIT_SCRIPT}" > /setup/entrypoint.sh && \
   sed -i "1a sudo bash /setup/additional-entrypoint.sh" /setup/entrypoint.sh && \
-  echo "${SETUP_ENV_SCRIPT}" > /setup/setup-env.sh
+  echo "${SETUP_ENV_SCRIPT_B64}" | base64 --decode >> /setup/setup-env.sh
   
 
 # Create a non-root user
@@ -87,8 +87,8 @@ WORKDIR /home/${USER}
 
 # Setup user home directory and SSH keys
 COPY ssh .ssh
-ARG WORKSPACE_FILE="{}"
-RUN echo "${WORKSPACE_FILE}" > workspace.code-workspace && \
+ARG WORKSPACE_FILE_B64=""
+RUN echo "${WORKSPACE_FILE_B64}" | base64 --decode >> workspace.code-workspace && \
   sudo chown -R ${USER}:${USER} workspace.code-workspace && \
   sudo chown -R ${USER}:${USER} .ssh && \
   sudo chmod 700 .ssh && \

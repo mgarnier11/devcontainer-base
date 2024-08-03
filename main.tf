@@ -49,7 +49,7 @@ variable "username" {
   default     = "coder"
 }
 
-variable "setup_env_script" {
+variable "setup_env_script_path" {
   type        = string
   description = "A script to run after workspace setup."
   default = "echo 'No setup env script provided.'"
@@ -194,8 +194,8 @@ resource "docker_image" "main" {
       USER = var.username
       SSHD_PORT = var.sshd_port
       CODER_INIT_SCRIPT = replace(coder_agent.main.init_script, "/localhost|127\\.0\\.0\\.1/", "host.docker.internal")
-      SETUP_ENV_SCRIPT = var.setup_env_script
-      WORKSPACE_FILE = filebase64(var.workspace_file_path)
+      SETUP_ENV_SCRIPT_B64 = filebase64(var.setup_env_script_path)
+      WORKSPACE_FILE_B64 = filebase64(var.workspace_file_path)
     }
   }
   triggers = {
