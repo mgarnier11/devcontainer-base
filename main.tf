@@ -61,9 +61,9 @@ variable "workspace_file" {
   default = ""
 }
 
-variable "workspace_file_base64" {
-  type        = string
-  description = "The base64 encoded vscode workspace file to use."
+variable "workspace_file_json" {
+  type        = object
+  description = "The json vscode workspace file to use."
   default = ""
 }
 
