@@ -201,7 +201,7 @@ resource "docker_image" "main" {
       SSHD_PORT = var.sshd_port
       CODER_INIT_SCRIPT = replace(coder_agent.main.init_script, "/localhost|127\\.0\\.0\\.1/", "host.docker.internal")
       SETUP_ENV_SCRIPT = var.setup_env_script
-      WORKSPACE_FILE = var.workspace_file != "" ? var.workspace_file : base64decode(var.workspace_file_base64)
+      WORKSPACE_FILE = var.workspace_file != "" ? var.workspace_file : jsonencode(var.workspace_file_json)
     }
   }
   triggers = {
