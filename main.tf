@@ -55,15 +55,9 @@ variable "setup_env_script" {
   default = "echo 'No setup env script provided.'"
 }
 
-variable "workspace_file" {
+variable "workspace_file_path" {
   type        = string
   description = "The vscode workspace file to use."
-  default = ""
-}
-
-variable "workspace_file_json" {
-  type        = any
-  description = "The json vscode workspace file to use."
   default = ""
 }
 
@@ -201,7 +195,7 @@ resource "docker_image" "main" {
       SSHD_PORT = var.sshd_port
       CODER_INIT_SCRIPT = replace(coder_agent.main.init_script, "/localhost|127\\.0\\.0\\.1/", "host.docker.internal")
       SETUP_ENV_SCRIPT = var.setup_env_script
-      WORKSPACE_FILE = var.workspace_file != "" ? var.workspace_file : jsonencode(var.workspace_file_json)
+      WORKSPACE_FILE = file(var.workspace_file_path)
     }
   }
   triggers = {
