@@ -62,7 +62,7 @@ variable "workspace_file" {
 }
 
 variable "workspace_file_json" {
-  type        = object
+  type        = any
   description = "The json vscode workspace file to use."
   default = ""
 }
