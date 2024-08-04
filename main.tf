@@ -91,6 +91,13 @@ variable "install_nvm" {
   default     = false  
 }
 
+variable "install_ansible" {
+  type        = bool
+  description = "Install Ansible in the workspace."
+  default     = false
+  
+}
+
 resource "coder_agent" "main" {
   arch            = var.arch
   os              = var.os
@@ -157,6 +164,7 @@ resource "coder_script" "install-dependencies" {
     INSTALL_TASKS : var.install_tasks,
     INSTALL_GO : var.install_go,
     INSTALL_NVM : var.install_nvm,
+    INSTALL_ANSIBLE : var.install_ansible,
   })
   run_on_start = true
   start_blocks_login = true

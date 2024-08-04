@@ -40,6 +40,13 @@ if [ -z $INSTALL_NVM ]; then
   printf "NVM Installed"
 fi
 
+# Ansible Installation
+if [ -z $INSTALL_ANSIBLE ]; then
+  sudo add-apt-repository --yes --update ppa:ansible/ansible
+  sudo apt install ansible
+  printf "Ansible Installed"
+fi
+
 sudo chsh -s /usr/bin/zsh $USER
 
 if [ -f /setup/setup-env.sh ]; then
