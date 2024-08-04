@@ -197,7 +197,7 @@ resource "docker_image" "main" {
   build {
     context = "${path.module}/docker"
 
-    no_cache = true
+    # no_cache = true
     build_args = {
       USER = var.username
       SSHD_PORT = var.sshd_port
