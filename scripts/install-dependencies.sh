@@ -43,7 +43,7 @@ fi
 # Ansible Installation
 if [ -z $INSTALL_ANSIBLE ]; then
   sudo add-apt-repository --yes --update ppa:ansible/ansible
-  sudo apt install ansible
+  DEBIAN_FRONTEND=noninteractive TZ=Europe/Paris apt-get install -y ansible
   printf "Ansible Installed"
 fi
 
